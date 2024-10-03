@@ -1,5 +1,9 @@
+const searchParam = location.search.split("=").pop();
+
+
 const access_key = 'RPkeIF9-MXKW5Ft54YCbcIuf1gdHSvx_3FNiLIRxZR4'
 const random_photo_url = `https://api.unsplash.com/photos/random?client_id=${access_key}&count=30`
+const search_photo_url = `https://api.unsplash.com/search/photos?client_id=${access_key}&query=${searchParam}&per_page=50`
 const gallery = document.querySelector(".gallery")
 
 let AllImages;
@@ -9,6 +13,18 @@ const getImages =()=>{
     .then(data=>{
         AllImages = data
         makeImages(AllImages)
+       
+        
+    });  
+}
+//fetch data for search images 
+const searchImages =()=>{
+    fetch(search_photo_url).then(res=>res.json())
+    .then(data=>{
+        AllImages = data.results
+        makeImages(AllImages)
+       
+        
     });  
 }
 const makeImages =(data)=>{
@@ -39,7 +55,14 @@ closeBtn.addEventListener("click",()=>{
     popup.classList.add("hide")
 })
 }
-getImages()
+
+
+if(searchParam == ""){
+    getImages()
+}
+else{
+    searchImages()
+}
 
 // previous and next popup button 
 
@@ -57,3 +80,4 @@ nxtBtns.addEventListener("click",()=>{
         showPopup(AllImages[CurrentImage])
     }
 })
+
